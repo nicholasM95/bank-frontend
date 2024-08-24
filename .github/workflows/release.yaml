@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+  id-token: write
+
+env:
+  AWS_ROLE: 'arn:aws:iam::896918338968:role/GitHubActionsBankFrontendRole'
+  VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 22
+
+      - name: Build Project
+        run: |
+          rm -rf dist
+          npm install -g @angular/cli@latest
+          npm install
+          ng build --configuration=production
+
+      - name: Import secret
+        id: import-secret
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ env.VAULT_ADDR }}
+          role: github-actions-secret
+          method: jwt
+          path: github-actions-secret
+          secrets: |
+            github-actions-secret/data/secret CLOUDFLARE_API_KEY | CLOUDFLARE_API_KEY ;
+            github-actions-secret/data/secret CLOUDFLARE_EMAIL | CLOUDFLARE_EMAIL ;
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: eu-west-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8 # v3.1.1
+
+      - name: Terraform Format Check
+        id: fmt-check
+        run: terraform fmt -check
+        working-directory: infra
+
+      - name: Install Semantic Release and plugins
+        run: |
+          npm install semantic-release @semantic-release/exec @semantic-release/changelog @semantic-release/github
+
+      - name: Create Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG.md
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add CHANGELOG.md
+          git commit -m "docs(CHANGELOG): Update CHANGELOG.md"
+          git push origin main
+
+      - name: Update develop branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git fetch origin
+          git checkout develop
+          git merge --ff-only origin/main
+          git push origin develop
+
+      - name: Terraform init
+        if: github.ref == 'refs/heads/develop'
+        id: tf-init
+        run: terraform init
+        working-directory: infra/prod
+
+      - name: Terraform plan
+        if: github.ref == 'refs/heads/develop'
+        id: tf-plan
+        run: terraform plan
+        working-directory: infra/prod
+
+      - name: Terraform apply
+        if: github.ref == 'refs/heads/develop'
+        id: tf-apply
+        run: terraform apply -auto-approve
+        working-directory: infra/prod
