@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="row">
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-2 pt-4">
+            <div class="d-flex flex-column">
+                @if (isDarkMode) {
+                    <button type="button" class="btn btn-outline-light mb-3">Login</button>
+                    <button type="button" class="btn btn-outline-light mb-3">Login</button>
+                } @else {
+                    <button type="button" class="btn btn-outline-dark mb-3">Login</button>
+                    <button type="button" class="btn btn-outline-dark mb-3">Login</button>
+                }
+            </div>
+        </div>
+
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-10">
+            <div class="p-4">
+                <h2 [ngClass]="{ 'text-white': isDarkMode }" class="mb-4">Monthly Income & Expenses Overview</h2>
+                <canvas id="chart">{{ chart }}</canvas>
+            </div>
+        </div>
+    </div>
+</div>

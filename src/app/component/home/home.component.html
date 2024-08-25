@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 text-center">
+            <h1 [ngClass]="{ 'text-white': isDarkMode }" class="display-4">Welcome to Your Financial Tracker</h1>
+            <p [ngClass]="{ 'text-white': isDarkMode }" class="lead">Manage both your income and expenses. Visualize your cash flow and stay on top of your budget.</p>
+            <hr [ngClass]="{ 'text-white': isDarkMode }" class="my-4">
+            @if (isDarkMode) {
+                <button (click)="login()" class="btn btn-outline-light btn-lg" type="button">Login</button>
+            } @else {
+                <button (click)="login()" class="btn btn-outline-dark btn-lg" type="button">Login</button>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <div class="row">
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-2 pt-4">
+            <div class="d-flex flex-column">
+                @if (isDarkMode) {
+                    <button (click)="goBack()" type="button" class="btn btn-outline-light mb-3">Go Back</button>
+                } @else {
+                    <button (click)="goBack()" type="button" class="btn btn-outline-dark mb-3">Go Back</button>
+                }
+            </div>
+        </div>
+
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-10">
+            <div class="p-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 [ngClass]="{ 'text-white': isDarkMode }" class="text-center">Incomes</h3>
+                            <table [ngClass]="{ 'table-dark': isDarkMode }" class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Name</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @for (stat of (stats | async)?.incoming; track stat) {
+                                        <tr>
+                                            <td width="100px">{{ stat.bookingDate }}</td>
+                                            <td width="100px">{{ stat.amount }} {{ stat.currency }}</td>
+                                            <td width="300px">{{ stat.name }}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h3 [ngClass]="{ 'text-white': isDarkMode }" class="text-center">Expenses</h3>
+                            <table [ngClass]="{ 'table-dark': isDarkMode }" class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Name</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @for (stat of (stats | async)?.outgoing; track stat) {
+                                        <tr>
+                                            <td width="100px">{{ stat.bookingDate }}</td>
+                                            <td width="100px">{{ stat.amount }} {{ stat.currency }}</td>
+                                            <td width="300px">{{ stat.name }}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
