@@ -4,8 +4,10 @@
             <div class="d-flex flex-column">
                 @if (isDarkMode) {
                     <button (click)="goBack()" type="button" class="btn btn-outline-light mb-3">Go Back</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-light mb-3">logout</button>
                 } @else {
                     <button (click)="goBack()" type="button" class="btn btn-outline-dark mb-3">Go Back</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-dark mb-3">logout</button>
                 }
             </div>
         </div>

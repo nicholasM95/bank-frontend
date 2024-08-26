@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TransactionService, TransactionStatsResponse} from '../../service';
 import {Observable} from 'rxjs';
 import {AsyncPipe, NgClass} from '@angular/common';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-stats',
@@ -18,7 +19,7 @@ export class StatsComponent {
   stats: Observable<TransactionStatsResponse> | undefined;
   isDarkMode = false;
 
-  constructor(private transactionService: TransactionService, private route: ActivatedRoute, private router: Router) {
+  constructor(private transactionService: TransactionService, private route: ActivatedRoute, private router: Router, private oauthService: OAuthService) {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.isDarkMode = true;
     }
@@ -41,11 +42,12 @@ export class StatsComponent {
   }
 
   getData(month: string) {
-    console.log(month);
     this.stats = this.transactionService.getStats({month: month})
         .pipe();
   }
 
-
+  logout() {
+    this.oauthService.logOut();
+  }
 
 }

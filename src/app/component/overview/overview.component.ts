@@ -15,6 +15,7 @@ import {
 } from 'chart.js';
 import {Router} from '@angular/router';
 import {NgClass} from '@angular/common';
+import {OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-overview',
@@ -30,7 +31,7 @@ export class OverviewComponent {
   chart: any;
   isDarkMode = false;
 
-  constructor(private transactionService: TransactionService, private router: Router) {
+  constructor(private transactionService: TransactionService, private router: Router, private oauthService: OAuthService) {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.isDarkMode = true;
     }
@@ -88,5 +89,9 @@ export class OverviewComponent {
         }
       });
     })
+  }
+
+  logout() {
+    this.oauthService.logOut();
   }
 }

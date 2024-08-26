@@ -5,9 +5,11 @@
                 @if (isDarkMode) {
                     <button type="button" class="btn btn-outline-light mb-3">Login</button>
                     <button type="button" class="btn btn-outline-light mb-3">Login</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-light mb-3">Logout</button>
                 } @else {
                     <button type="button" class="btn btn-outline-dark mb-3">Login</button>
                     <button type="button" class="btn btn-outline-dark mb-3">Login</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-dark mb-3">Logout</button>
                 }
             </div>
         </div>

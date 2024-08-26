@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
 import {NgClass} from '@angular/common';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-home',
@@ -13,9 +14,21 @@ import {NgClass} from '@angular/common';
 })
 export class HomeComponent {
 
-  isDarkMode = false;
+  authCodeFlowConfig: AuthConfig = {
+    issuer: 'https://keycloak.nicholasmeyers.be/realms/bank',
+    redirectUri: window.location.origin,
+    clientId: 'bank-frontend',
+    responseType: 'code',
+    scope: 'openid profile email offline_access',
+    strictDiscoveryDocumentValidation: true,
+    disableAtHashCheck: false,
+    disablePKCE: false,
+  };
 
-  constructor(private router: Router) {
+  isDarkMode = false;
+  showContent = false;
+
+  constructor(private router: Router, private oauthService: OAuthService) {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.isDarkMode = true;
     }
@@ -23,9 +36,21 @@ export class HomeComponent {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
       this.isDarkMode = event.matches;
     });
+    this.oauthService.configure(this.authCodeFlowConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+      if (this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken()) {
+        this.navigate();
+      } else {
+        this.showContent = true;
+      }
+    });
   }
 
   login() {
+    this.oauthService.initCodeFlow();
+  }
+
+  private navigate() {
     this.router.navigateByUrl('overview').then(r => {
       if (!r) {
         console.error('failed to navigate to overview from home');
