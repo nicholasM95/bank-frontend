@@ -3,7 +3,7 @@ info:
   title: Bank Account API
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: https://bank-api.app-meyers.be
 tags:
   - name: transaction
     description: transaction
