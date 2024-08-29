@@ -1,0 +1,7 @@
+{
+  "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+  "input": "openapi/exclude-openapi-spec.yaml",
+  "output": "src/app/service/exclude",
+  "ignoreUnusedModels": false,
+  "indexFile": true
+}
