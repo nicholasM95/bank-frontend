@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {TransactionService} from '../../service';
+import {TransactionService} from '../../service/transaction';
 import {
   CategoryScale,
   Chart,

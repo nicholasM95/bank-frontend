@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TransactionService, TransactionStatsResponse} from '../../service';
+import {TransactionService, TransactionStatsResponse} from '../../service/transaction';
 import {Observable} from 'rxjs';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {OAuthService} from 'angular-oauth2-oidc';
