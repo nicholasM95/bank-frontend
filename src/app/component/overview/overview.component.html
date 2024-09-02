@@ -3,12 +3,20 @@
         <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-2 pt-4">
             <div class="d-flex flex-column">
                 @if (isDarkMode) {
-                    <button type="button" class="btn btn-outline-light mb-3">Login</button>
-                    <button type="button" class="btn btn-outline-light mb-3">Login</button>
+                    @for (account of accounts; track account) {
+                        <button type="button" class="btn btn-outline-light mb-3">Login {{ account.name }}</button>
+                    }
+                    @if (showSyncButton) {
+                        <button (click)="sync()" type="button" class="btn btn-outline-light mb-3">Sync</button>
+                    }
                     <button (click)="logout()" type="button" class="btn btn-outline-light mb-3">Logout</button>
                 } @else {
-                    <button type="button" class="btn btn-outline-dark mb-3">Login</button>
-                    <button type="button" class="btn btn-outline-dark mb-3">Login</button>
+                    @for (account of accounts; track account) {
+                        <button type="button" class="btn btn-outline-dark mb-3">Login {{ account.name }}</button>
+                    }
+                    @if (showSyncButton) {
+                        <button (click)="sync()" type="button" class="btn btn-outline-dark mb-3">Sync</button>
+                    }
                     <button (click)="logout()" type="button" class="btn btn-outline-dark mb-3">Logout</button>
                 }
             </div>

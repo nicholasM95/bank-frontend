@@ -3,7 +3,6 @@ import {TransactionService} from '../../service/transaction';
 import {
   CategoryScale,
   Chart,
-  ChartConfiguration,
   Filler,
   Legend,
   LinearScale,
@@ -16,6 +15,7 @@ import {
 import {Router} from '@angular/router';
 import {NgClass} from '@angular/common';
 import {OAuthService} from 'angular-oauth2-oidc';
+import {AccountResponse, AccountService} from '../../service/account';
 
 @Component({
   selector: 'app-overview',
@@ -30,8 +30,10 @@ export class OverviewComponent {
 
   chart: any;
   isDarkMode = false;
+  accounts: AccountResponse[] = [];
+  showSyncButton = false;
 
-  constructor(private transactionService: TransactionService, private router: Router, private oauthService: OAuthService) {
+  constructor(private accountService: AccountService, private transactionService: TransactionService, private router: Router, private oauthService: OAuthService) {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.isDarkMode = true;
     }
@@ -51,6 +53,7 @@ export class OverviewComponent {
         Legend,
         Filler
     );
+    this.getAccounts();
     this.getData();
   }
 
@@ -89,6 +92,23 @@ export class OverviewComponent {
         }
       });
     })
+  }
+
+  getAccounts() {
+    this.accountService.getAllAccounts().subscribe(accounts => {
+      this.accounts = accounts;
+      let canSync = true;
+      this.accounts.forEach(account => {
+        if (account.status !== 'ACCOUNT_ACTIVE') {
+          canSync = false;
+        }
+      });
+      this.showSyncButton = canSync;
+    });
+  }
+
+  sync() {
+    this.accountService.sync().subscribe();
   }
 
   logout() {
