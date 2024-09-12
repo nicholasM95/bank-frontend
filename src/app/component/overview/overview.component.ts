@@ -107,8 +107,20 @@ export class OverviewComponent {
     });
   }
 
+  getName(value: string) {
+    return value.split('_')[0].toUpperCase();
+  }
+
   sync() {
     this.accountService.sync().subscribe();
+  }
+
+  openTable() {
+    this.router.navigateByUrl('table').then(r => {
+      if (!r) {
+        console.error('failed to navigate to table from overview');
+      }
+    });
   }
 
   logout() {

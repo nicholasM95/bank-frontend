@@ -4,19 +4,21 @@
             <div class="d-flex flex-column">
                 @if (isDarkMode) {
                     @for (account of accounts; track account) {
-                        <button type="button" class="btn btn-outline-light mb-3">Login {{ account.name }}</button>
+                        <button type="button" class="btn btn-outline-light mb-3">Login {{ getName(account.name) }}</button>
                     }
                     @if (showSyncButton) {
                         <button (click)="sync()" type="button" class="btn btn-outline-light mb-3">Sync</button>
                     }
+                    <button (click)="openTable()" type="button" class="btn btn-outline-light mb-3">Table</button>
                     <button (click)="logout()" type="button" class="btn btn-outline-light mb-3">Logout</button>
                 } @else {
                     @for (account of accounts; track account) {
-                        <button type="button" class="btn btn-outline-dark mb-3">Login {{ account.name }}</button>
+                        <button type="button" class="btn btn-outline-dark mb-3">Login {{ getName(account.name) }}</button>
                     }
                     @if (showSyncButton) {
                         <button (click)="sync()" type="button" class="btn btn-outline-dark mb-3">Sync</button>
                     }
+                    <button (click)="openTable()" type="button" class="btn btn-outline-dark mb-3">Table</button>
                     <button (click)="logout()" type="button" class="btn btn-outline-dark mb-3">Logout</button>
                 }
             </div>

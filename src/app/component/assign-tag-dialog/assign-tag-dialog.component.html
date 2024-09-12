@@ -1,0 +1,33 @@
+<div class="container-fluid dialog-custom-style">
+    <h1 [ngClass]="{ 'text-white': data.isDark }">Assign Tags</h1>
+    <div>
+        <p [ngClass]="{ 'text-white': data.isDark }">Assign tags for: {{ data.transaction.name }}</p>
+        <div class="form-group mb-3">
+            @if (data.isDark) {
+                <select data-bs-theme="dark" class="form-control" [(ngModel)]="selectedTag">
+                    <option value="">choose a tag</option>
+                    @for (tag of data.tags; track tag) {
+                        <option value="{{tag.id}}">{{ tag.name }}</option>
+                    }
+                </select>
+            } @else {
+                <select class="form-control" [(ngModel)]="selectedTag">
+                    <option value="">choose a tag</option>
+                    @for (tag of data.tags; track tag) {
+                        <option value="{{tag.id}}">{{ tag.name }}</option>
+                    }
+                </select>
+            }
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        @if (data.isDark) {
+            <button (click)="onNoClick()" type="button" class="btn btn-outline-light m-2">Cancel</button>
+            <button (click)="saveTags()" type="button" class="btn btn-outline-light">Save</button>
+        } @else {
+            <button (click)="onNoClick()" type="button" class="btn btn-outline-dark m-2">Cancel</button>
+            <button (click)="saveTags()" type="button" class="btn btn-outline-dark">Save</button>
+        }
+    </div>
+
+</div>

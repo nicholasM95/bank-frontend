@@ -1,0 +1,17 @@
+.dialog-custom-style {
+    padding: 2rem;
+    background-color: white;
+}
+
+.dialog-buttons {
+    text-align: right;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    .dialog-custom-style {
+        --bs-bg-opacity: 1;
+        background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+    }
+}
+

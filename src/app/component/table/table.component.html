@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <div class="row">
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-2 pt-4">
+            <div class="d-flex flex-column">
+                @if (isDarkMode) {
+                    <button (click)="goBack()" type="button" class="btn btn-outline-light mb-3">Go Back</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-light mb-3">Logout</button>
+                } @else {
+                    <button (click)="goBack()" type="button" class="btn btn-outline-dark mb-3">Go Back</button>
+                    <button (click)="logout()" type="button" class="btn btn-outline-dark mb-3">Logout</button>
+                }
+            </div>
+        </div>
+
+        <div [ngClass]="{ 'bg-dark': isDarkMode }" class="col-md-10">
+            <div class="p-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="d-flex flex-column">
+                                @if (isDarkMode) {
+                                    @for (tag of tags; track tag) {
+                                        <button type="button" class="btn btn-outline-light mb-3">{{ tag.name }}</button>
+                                    }
+                                } @else {
+                                    @for (tag of tags; track tag) {
+                                        <button type="button" class="btn btn-outline-dark mb-3">{{ tag.name }}</button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group mb-3">
+                                <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearchChange()">
+                            </div>
+                            <table [ngClass]="{ 'table-dark': isDarkMode }" class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @for (transaction of (transactions | async)?.data; track transaction) {
+                                        <tr>
+                                            <td width="100px">{{ transaction.bookingDate }}</td>
+                                            <td width="100px">{{ transaction.amount }} {{ transaction.currency }}</td>
+                                            <td width="300px">{{ transaction.name }}</td>
+                                            @if (isDarkMode) {
+                                                <td width="80px">
+                                                    <button type="button" class="btn btn-outline-light" (click)="openTagDialog(transaction)">Assign Tags</button>
+                                                </td>
+                                            } @else {
+                                                <td width="80px">
+                                                    <button type="button" class="btn btn-outline-dark" (click)="openTagDialog(transaction)">Assign Tags</button>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

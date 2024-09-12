@@ -27,6 +27,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+    post:
+      tags:
+        - transaction
+      operationId: queryOverview
+      summary: get overview by query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionQueryOverviewRequest'
+      responses:
+        200:
+          description: Request successfully processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionQueryOverviewResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /transaction/stats/{month}:
     get:
       tags:
@@ -49,6 +73,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionStatsResponse'
+  /transaction/tag:
+    post:
+      tags:
+        - transaction
+      operationId: assignTag
+      summary: Assign tag to transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagAssignTransactionRequest'
+      responses:
+        200:
+          description: Request successfully processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailStatsResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     TransactionOverviewResponse:
@@ -107,6 +156,57 @@ components:
         fill:
           type: string
           example: origin
+    TransactionQueryOverviewRequest:
+      required:
+        - page
+        - size
+        - search
+        - year
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 2
+        size:
+          type: integer
+          example: 50
+        search:
+          type: string
+          example: KBC
+        year:
+          type: array
+          items:
+            type: integer
+    TransactionQueryOverviewResponse:
+      required:
+        - totalAmount
+        - data
+        - first
+        - last
+        - previous
+        - next
+      type: object
+      properties:
+        totalAmount:
+          type: number
+          format: double
+          example: 15.5
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDetailStatsResponse'
+        first:
+          type: integer
+          example: 0
+        last:
+          type: integer
+          example: 4
+        previous:
+          type: integer
+          example: 1
+        next:
+          type: integer
+          example: 3
     TransactionStatsResponse:
       required:
         - incoming
@@ -121,14 +221,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TransactionDetailStatsResponse'
+    TagAssignTransactionRequest:
+      required:
+        - tagId
+        - transactionId
+      type: object
+      properties:
+        tagId:
+          type: string
+          format: uuid
+          example: 80e09a56-c2b2-4e13-a990-3e337c9901ad
+        transactionId:
+          type: string
+          format: uuid
+          example: bbf0e6c2-f465-4e50-a5e6-44cbcfdc30cd
     TransactionDetailStatsResponse:
       required:
+        - id
         - name
         - amount
         - currency
         - bookingDate
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          example: bbf0e6c2-f465-4e50-a5e6-44cbcfdc30cd
         name:
           type: string
           example: Nicholas Meyers
