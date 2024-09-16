@@ -22,12 +22,12 @@
                                     @for (tag of tags; track tag) {
                                         <button type="button" class="btn btn-outline-light mb-3">{{ tag.name }}</button>
                                     }
-                                    <button (click)="newTag()" type="button" class="btn btn-outline-light mb-3">New Tag</button>
+                                    <button (click)="openNewTagDialog()" type="button" class="btn btn-outline-light mb-3">New Tag</button>
                                 } @else {
                                     @for (tag of tags; track tag) {
                                         <button type="button" class="btn btn-outline-dark mb-3">{{ tag.name }}</button>
                                     }
-                                    <button (click)="newTag()" type="button" class="btn btn-outline-dark mb-3">New Tag</button>
+                                    <button (click)="openNewTagDialog()" type="button" class="btn btn-outline-dark mb-3">New Tag</button>
                                 }
                             </div>
                         </div>
@@ -60,13 +60,13 @@
                                             </td>
                                             @if (isDarkMode) {
                                                 <td width="100px">
-                                                    <button type="button" class="btn btn-outline-light" (click)="openTagDialog(transaction)">Assign
+                                                    <button type="button" class="btn btn-outline-light" (click)="openAssignTagDialog(transaction)">Assign
                                                         Tags
                                                     </button>
                                                 </td>
                                             } @else {
                                                 <td width="100px">
-                                                    <button type="button" class="btn btn-outline-dark" (click)="openTagDialog(transaction)">Assign
+                                                    <button type="button" class="btn btn-outline-dark" (click)="openAssignTagDialog(transaction)">Assign
                                                         Tags
                                                     </button>
                                                 </td>

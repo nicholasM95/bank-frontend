@@ -13,6 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {AssignTagDialogComponent} from "../assign-tag-dialog/assign-tag-dialog.component";
 import {TagResponse, TagService} from "../../service/tag";
 import {filter} from "rxjs/operators";
+import {NewTagDialogComponent} from "../new-tag-dialog/new-tag-dialog.component";
 
 @Component({
     selector: 'app-table',
@@ -72,15 +73,11 @@ export class TableComponent {
             });
     }
 
-    newTag() {
-
-    }
-
     onSearchChange() {
         this.getTransactions();
     }
 
-    openTagDialog(transaction: TransactionDetailTableResponse) {
+    openAssignTagDialog(transaction: TransactionDetailTableResponse) {
         const dialogRef = this.dialog.open(AssignTagDialogComponent, {
             width: '400px',
             data: {'transaction': transaction, 'tags': this.tags, 'isDark': this.isDarkMode}
@@ -90,6 +87,21 @@ export class TableComponent {
             if (result !== undefined && result !== '') {
                 this.transactionService.assignTag({body: {transactionId: transaction.id, tagId: result}}).subscribe(data => {
                     this.getTransactions();
+                });
+            }
+        });
+    }
+
+    openNewTagDialog() {
+        const dialogRef = this.dialog.open(NewTagDialogComponent, {
+            width: '400px',
+            data: {'isDark': this.isDarkMode}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== undefined && result.name !== '' && result.description !== '') {
+                this.tagService.createTag({body: {name: result.name, description: result.description}}).subscribe(data => {
+                    this.getTags();
                 });
             }
         });
