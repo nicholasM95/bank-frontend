@@ -37,6 +37,7 @@ export class HomeComponent {
       this.isDarkMode = event.matches;
     });
     this.oauthService.configure(this.authCodeFlowConfig);
+    this.oauthService.setStorage(sessionStorage);
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
       if (this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken()) {
         this.navigate();

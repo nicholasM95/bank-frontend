@@ -2,12 +2,17 @@ import {Component} from '@angular/core';
 import {AsyncPipe, NgClass} from '@angular/common';
 import {Router} from '@angular/router';
 import {OAuthService} from 'angular-oauth2-oidc';
-import {TransactionDetailStatsResponse, TransactionQueryOverviewResponse, TransactionService} from "../../service/transaction";
+import {
+    TransactionDetailTableResponse,
+    TransactionQueryOverviewResponse,
+    TransactionService
+} from "../../service/transaction";
 import {Observable} from "rxjs";
 import {FormsModule} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {AssignTagDialogComponent} from "../assign-tag-dialog/assign-tag-dialog.component";
 import {TagResponse, TagService} from "../../service/tag";
+import {filter} from "rxjs/operators";
 
 @Component({
     selector: 'app-table',
@@ -37,11 +42,26 @@ export class TableComponent {
 
         this.getTransactions();
         this.getTags();
+        //this.oauthService.setupAutomaticSilentRefresh();
+
+        this.oauthService.events
+            .pipe(filter(e => e.type === 'token_expires'))
+            .subscribe(e => {
+                console.log('Access token almost expired');
+                this.oauthService.silentRefresh()
+                    .then(() => {
+                        console.log('Access token refreshed!');
+                    })
+                    .catch(err => {
+                        console.error('Token refresh failed:', err);
+                        //this.logout()
+                    });
+            });
     }
 
 
     getTransactions() {
-        this.transactions = this.transactionService.queryOverview({body: {page: 0, size: 50, search: this.searchText, year: [2024]}})
+        this.transactions = this.transactionService.queryOverview({body: {page: 0, size: 900, search: this.searchText, year: [2022]}})
             .pipe();
     }
 
@@ -52,11 +72,15 @@ export class TableComponent {
             });
     }
 
+    newTag() {
+
+    }
+
     onSearchChange() {
         this.getTransactions();
     }
 
-    openTagDialog(transaction: TransactionDetailStatsResponse) {
+    openTagDialog(transaction: TransactionDetailTableResponse) {
         const dialogRef = this.dialog.open(AssignTagDialogComponent, {
             width: '400px',
             data: {'transaction': transaction, 'tags': this.tags, 'isDark': this.isDarkMode}
@@ -64,9 +88,8 @@ export class TableComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== undefined && result !== '') {
-                console.log(transaction.name);
                 this.transactionService.assignTag({body: {transactionId: transaction.id, tagId: result}}).subscribe(data => {
-                    console.log(data);
+                    this.getTransactions();
                 });
             }
         });
@@ -82,6 +105,11 @@ export class TableComponent {
 
     logout() {
         this.oauthService.logOut();
+        this.router.navigateByUrl('home').then(r => {
+            if (!r) {
+                console.error('failed to navigate to home after logout');
+            }
+        });
     }
 
 }

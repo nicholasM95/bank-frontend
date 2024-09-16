@@ -22,10 +22,12 @@
                                     @for (tag of tags; track tag) {
                                         <button type="button" class="btn btn-outline-light mb-3">{{ tag.name }}</button>
                                     }
+                                    <button (click)="newTag()" type="button" class="btn btn-outline-light mb-3">New Tag</button>
                                 } @else {
                                     @for (tag of tags; track tag) {
                                         <button type="button" class="btn btn-outline-dark mb-3">{{ tag.name }}</button>
                                     }
+                                    <button (click)="newTag()" type="button" class="btn btn-outline-dark mb-3">New Tag</button>
                                 }
                             </div>
                         </div>
@@ -39,6 +41,7 @@
                                     <th scope="col">Date</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Tags</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                                 </thead>
@@ -47,14 +50,25 @@
                                         <tr>
                                             <td width="100px">{{ transaction.bookingDate }}</td>
                                             <td width="100px">{{ transaction.amount }} {{ transaction.currency }}</td>
-                                            <td width="300px">{{ transaction.name }}</td>
+                                            <td width="200px">{{ transaction.name }}</td>
+                                            <td width="300px">
+                                                @if (transaction.tags && transaction.tags.length > 0) {
+                                                    @for (tag of transaction.tags; track tag) {
+                                                        {{ tag.name }}
+                                                    }
+                                                }
+                                            </td>
                                             @if (isDarkMode) {
-                                                <td width="80px">
-                                                    <button type="button" class="btn btn-outline-light" (click)="openTagDialog(transaction)">Assign Tags</button>
+                                                <td width="100px">
+                                                    <button type="button" class="btn btn-outline-light" (click)="openTagDialog(transaction)">Assign
+                                                        Tags
+                                                    </button>
                                                 </td>
                                             } @else {
-                                                <td width="80px">
-                                                    <button type="button" class="btn btn-outline-dark" (click)="openTagDialog(transaction)">Assign Tags</button>
+                                                <td width="100px">
+                                                    <button type="button" class="btn btn-outline-dark" (click)="openTagDialog(transaction)">Assign
+                                                        Tags
+                                                    </button>
                                                 </td>
                                             }
                                         </tr>

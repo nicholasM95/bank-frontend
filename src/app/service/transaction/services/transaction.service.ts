@@ -13,7 +13,6 @@ import {assignTag, AssignTag$Params} from '../fn/transaction/assign-tag';
 import {getOverview, GetOverview$Params} from '../fn/transaction/get-overview';
 import {getStats, GetStats$Params} from '../fn/transaction/get-stats';
 import {queryOverview, QueryOverview$Params} from '../fn/transaction/query-overview';
-import {TransactionDetailStatsResponse} from '../models/transaction-detail-stats-response';
 import {TransactionOverviewResponse} from '../models/transaction-overview-response';
 import {TransactionQueryOverviewResponse} from '../models/transaction-query-overview-response';
 import {TransactionStatsResponse} from '../models/transaction-stats-response';
@@ -140,7 +139,7 @@ export class TransactionService extends BaseService {
      *
      * This method sends `application/json` and handles request body of type `application/json`.
      */
-    assignTag$Response(params: AssignTag$Params, context?: HttpContext): Observable<StrictHttpResponse<TransactionDetailStatsResponse>> {
+    assignTag$Response(params: AssignTag$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
         return assignTag(this.http, this.rootUrl, params, context);
     }
 
@@ -154,9 +153,9 @@ export class TransactionService extends BaseService {
      *
      * This method sends `application/json` and handles request body of type `application/json`.
      */
-    assignTag(params: AssignTag$Params, context?: HttpContext): Observable<TransactionDetailStatsResponse> {
+    assignTag(params: AssignTag$Params, context?: HttpContext): Observable<void> {
         return this.assignTag$Response(params, context).pipe(
-            map((r: StrictHttpResponse<TransactionDetailStatsResponse>): TransactionDetailStatsResponse => r.body)
+            map((r: StrictHttpResponse<void>): void => r.body)
         );
     }
 

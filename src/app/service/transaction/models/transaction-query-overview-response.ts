@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import {TransactionDetailStatsResponse} from '../models/transaction-detail-stats-response';
+import {TransactionDetailTableResponse} from './transaction-detail-table-response';
 
 export interface TransactionQueryOverviewResponse {
-    data: Array<TransactionDetailStatsResponse>;
+    data: Array<TransactionDetailTableResponse>;
     first: number;
     last: number;
     next: number;

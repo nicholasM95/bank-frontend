@@ -48,6 +48,11 @@ export class StatsComponent {
 
   logout() {
     this.oauthService.logOut();
+    this.router.navigateByUrl('home').then(r => {
+      if (!r) {
+        console.error('failed to navigate to home after logout');
+      }
+    });
   }
 
 }

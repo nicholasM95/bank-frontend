@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MatFormField} from "@angular/material/form-field";
 import {FormsModule} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -26,6 +26,11 @@ export class AssignTagDialogComponent {
         public dialogRef: MatDialogRef<AssignTagDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: { transaction: TransactionDetailStatsResponse, tags: TagResponse[], isDark: boolean }
     ) {
+    }
+
+    @HostListener('document:keydown.enter', ['$event'])
+    handleEnterKeyPress(event: KeyboardEvent) {
+        this.saveTags();
     }
 
     onNoClick(): void {

@@ -86,12 +86,8 @@ paths:
             schema:
               $ref: '#/components/schemas/TagAssignTransactionRequest'
       responses:
-        200:
+        204:
           description: Request successfully processed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionDetailStatsResponse'
         400:
           description: Bad request
           content:
@@ -194,7 +190,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/TransactionDetailStatsResponse'
+            $ref: '#/components/schemas/TransactionDetailTableResponse'
         first:
           type: integer
           example: 0
@@ -237,11 +233,33 @@ components:
           example: bbf0e6c2-f465-4e50-a5e6-44cbcfdc30cd
     TransactionDetailStatsResponse:
       required:
+        - name
+        - amount
+        - currency
+        - bookingDate
+      type: object
+      properties:
+        name:
+          type: string
+          example: Nicholas Meyers
+        amount:
+          type: number
+          format: double
+          example: 14.3
+        currency:
+          type: string
+          example: EUR
+        bookingDate:
+          type: string
+          example: 10/10/2024
+    TransactionDetailTableResponse:
+      required:
         - id
         - name
         - amount
         - currency
         - bookingDate
+        - tags
       type: object
       properties:
         id:
@@ -261,6 +279,23 @@ components:
         bookingDate:
           type: string
           example: 10/10/2024
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionTagResponse'
+    TransactionTagResponse:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: bbf0e6c2-f465-4e50-a5e6-44cbcfdc30cd
+        name:
+          type: string
+          example: public transport
     ProblemDetailResponse:
       required:
         - title
