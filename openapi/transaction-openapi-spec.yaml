@@ -157,6 +157,7 @@ components:
         - page
         - size
         - search
+        - tags
         - year
       type: object
       properties:
@@ -169,6 +170,11 @@ components:
         search:
           type: string
           example: KBC
+        tags:
+          type: array
+          items:
+            type: string
+            example: public transport
         year:
           type: array
           items:

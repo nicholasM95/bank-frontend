@@ -20,18 +20,72 @@
                             <div class="d-flex flex-column">
                                 @if (isDarkMode) {
                                     @for (tag of tags; track tag) {
-                                        <button type="button" class="btn btn-outline-light mb-3">{{ tag.name }}</button>
+                                        @if (isFiltered(tag.name)) {
+                                            <button (click)="toggleTag(tag.name)" type="button" class="btn btn-light mb-3">{{ tag.name }}</button>
+                                        } @else {
+                                            <button (click)="toggleTag(tag.name)" type="button" class="btn btn-outline-light mb-3">{{ tag.name }}</button>
+                                        }
                                     }
                                     <button (click)="openNewTagDialog()" type="button" class="btn btn-outline-light mb-3">New Tag</button>
                                 } @else {
                                     @for (tag of tags; track tag) {
-                                        <button type="button" class="btn btn-outline-dark mb-3">{{ tag.name }}</button>
+                                        @if (isFiltered(tag.name)) {
+                                            <button (click)="toggleTag(tag.name)" type="button" class="btn btn-dark mb-3">{{ tag.name }}</button>
+                                        } @else {
+                                            <button (click)="toggleTag(tag.name)" type="button" class="btn btn-outline-dark mb-3">{{ tag.name }}</button>
+                                        }
                                     }
                                     <button (click)="openNewTagDialog()" type="button" class="btn btn-outline-dark mb-3">New Tag</button>
                                 }
                             </div>
                         </div>
                         <div class="col-md-10">
+                            <div class="form-group mb-3">
+                                @if (isDarkMode) {
+                                    @if (isFilteredYear(2022)) {
+                                        <button (click)="toggleYear(2022)" type="button" class="btn btn-light">2022</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2022)" type="button" class="btn btn-outline-light">2022</button>
+                                    }
+
+                                    @if (isFilteredYear(2023)) {
+                                        <button (click)="toggleYear(2023)" type="button" class="btn btn-light ms-3">2023</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2023)" type="button" class="btn btn-outline-light ms-3">2023</button>
+                                    }
+
+                                    @if (isFilteredYear(2024)) {
+                                        <button (click)="toggleYear(2024)" type="button" class="btn btn-light ms-3">2024</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2024)" type="button" class="btn btn-outline-light ms-3">2024</button>
+                                    }
+                                } @else {
+                                    @if (isFilteredYear(2022)) {
+                                        <button (click)="toggleYear(2022)" type="button" class="btn btn-dark">2022</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2022)" type="button" class="btn btn-outline-dark">2022</button>
+                                    }
+
+                                    @if (isFilteredYear(2023)) {
+                                        <button (click)="toggleYear(2023)" type="button" class="btn btn-dark ms-3">2023</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2023)" type="button" class="btn btn-outline-dark ms-3">2023</button>
+                                    }
+
+                                    @if (isFilteredYear(2024)) {
+                                        <button (click)="toggleYear(2024)" type="button" class="btn btn-dark ms-3">2024</button>
+                                    } @else {
+                                        <button (click)="toggleYear(2024)" type="button" class="btn btn-outline-dark ms-3">2024</button>
+                                    }
+                                }
+                            </div>
+                            <div class="form-group mb-3">
+                                @if (isDarkMode) {
+                                    <p class="form-control-plaintext text-white">Total: {{(transactions | async)?.totalAmount}}</p>
+                                } @else {
+                                    <p class="form-control-plaintext">Total: {{(transactions | async)?.totalAmount}}</p>
+                                }
+                            </div>
                             <div class="form-group mb-3">
                                 <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchText" (input)="onSearchChange()">
                             </div>
@@ -60,13 +114,15 @@
                                             </td>
                                             @if (isDarkMode) {
                                                 <td width="100px">
-                                                    <button type="button" class="btn btn-outline-light" (click)="openAssignTagDialog(transaction)">Assign
+                                                    <button type="button" class="btn btn-outline-light" (click)="openAssignTagDialog(transaction)">
+                                                        Assign
                                                         Tags
                                                     </button>
                                                 </td>
                                             } @else {
                                                 <td width="100px">
-                                                    <button type="button" class="btn btn-outline-dark" (click)="openAssignTagDialog(transaction)">Assign
+                                                    <button type="button" class="btn btn-outline-dark" (click)="openAssignTagDialog(transaction)">
+                                                        Assign
                                                         Tags
                                                     </button>
                                                 </td>
@@ -75,6 +131,23 @@
                                     }
                                 </tbody>
                             </table>
+                            @if (isDarkMode) {
+                                <div class="pagination-controls">
+                                    <button class="btn btn-outline-light" [disabled]="page === 0" (click)="goToFirstPage()">First</button>
+                                    <button class="btn btn-outline-light ms-3" [disabled]="page === 0" (click)="previousPage()">Previous</button>
+                                    <span class="text-white ms-3">Page {{page + 1}} of {{((transactions | async)?.last)! + 1}}</span>
+                                    <button class="btn btn-outline-light ms-3" [disabled]="page === (transactions | async)?.last" (click)="nextPage()">Next</button>
+                                    <button class="btn btn-outline-light ms-3" [disabled]="page === (transactions | async)?.last" (click)="goToLastPage(transactions)">Last</button>
+                                </div>
+                            } @else {
+                                <div class="pagination-controls">
+                                    <button class="btn btn-outline-dark" [disabled]="page === 0" (click)="goToFirstPage()">First</button>
+                                    <button class="btn btn-outline-dark ms-3" [disabled]="page === 0" (click)="previousPage()">Previous</button>
+                                    <span class="ms-3">Page {{page + 1}} of {{((transactions | async)?.last)! + 1}}</span>
+                                    <button class="btn btn-outline-dark ms-3" [disabled]="page === (transactions | async)?.last" (click)="nextPage()">Next</button>
+                                    <button class="btn btn-outline-dark ms-3" [disabled]="page === (transactions | async)?.last" (click)="goToLastPage(transactions)">Last</button>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

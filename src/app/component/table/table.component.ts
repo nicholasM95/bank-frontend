@@ -31,6 +31,10 @@ export class TableComponent {
     transactions: Observable<TransactionQueryOverviewResponse> | undefined;
     tags: TagResponse[] | undefined;
     searchText: string = '';
+    tagFilter: string[] = [];
+    yearFilter: number[] = [];
+    page: number = 0;
+    size: number = 50;
 
     constructor(private dialog: MatDialog, private tagService: TagService, private transactionService: TransactionService, private router: Router, private oauthService: OAuthService) {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -62,7 +66,7 @@ export class TableComponent {
 
 
     getTransactions() {
-        this.transactions = this.transactionService.queryOverview({body: {page: 0, size: 900, search: this.searchText, year: [2022]}})
+        this.transactions = this.transactionService.queryOverview({body: {page: this.page, size: this.size, search: this.searchText, tags: this.tagFilter, year: this.yearFilter}})
             .pipe();
     }
 
@@ -105,6 +109,56 @@ export class TableComponent {
                 });
             }
         });
+    }
+
+    isFiltered(tag: string) {
+        return this.tagFilter.includes(tag);
+    }
+
+    toggleTag(tag: string) {
+        if (this.isFiltered(tag)) {
+            this.tagFilter = this.tagFilter.filter(t => t !== tag);
+        } else {
+            this.tagFilter.push(tag);
+        }
+        this.getTransactions();
+    }
+
+    isFilteredYear(year: number) {
+        return this.yearFilter.includes(year);
+    }
+
+    toggleYear(year: number) {
+        if (this.isFilteredYear(year)) {
+            this.yearFilter = this.yearFilter.filter(t => t !== year);
+        } else {
+            this.yearFilter.push(year);
+        }
+        this.getTransactions();
+    }
+
+    goToFirstPage() {
+        this.page = 0;
+        this.getTransactions();
+    }
+
+    previousPage() {
+        this.page = this.page - 1;
+        this.getTransactions();
+    }
+
+    nextPage() {
+        this.page = this.page + 1;
+        this.getTransactions();
+    }
+
+    goToLastPage(transaction: Observable<TransactionQueryOverviewResponse> | undefined) {
+        if (transaction) {
+            transaction.subscribe(data => {
+                this.page = data.last;
+                this.getTransactions();
+            });
+        }
     }
 
     public goBack() {
