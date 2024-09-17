@@ -1,5 +1,5 @@
 module "static_website" {
-  source                  = "git::https://github.com/nicholasM95/terraform-modules.git//modules/static-website?ref=v1.4.0-SNAPSHOT.5"
+  source                  = "git::https://github.com/nicholasM95/terraform-modules.git//modules/static-website?ref=v1.5.1"
   domain_name             = "nicholasmeyers.be"
   sub_domain_name         = "bank"
   project_name            = "bank-nicholasmeyers-be"
