@@ -15,7 +15,7 @@ import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 export class HomeComponent {
 
   authCodeFlowConfig: AuthConfig = {
-    issuer: 'https://keycloak.nicholasmeyers.be/realms/bank',
+    issuer: 'https://keycloak.meyersnicholas.be/realms/bank',
     redirectUri: window.location.origin,
     clientId: 'bank-frontend',
     responseType: 'code',
